@@ -1,0 +1,129 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "speedpulse",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-10",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "speedpulse-db",
+      "database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "triggers": {
+    "crons": [
+      "*/5 * * * *"
+    ]
+  },
+  "vars": {
+    "APP_ENV": "production",
+    "SCHEDULE_BATCH_SIZE": "1",
+    "NEXT_SCHEDULER_ENABLED": "1",
+    "QUEUE_SCANS_ENABLED": "1",
+    "DETAILED_REPORTS_ENABLED": "1",
+    "LEGACY_SCHEDULER_ENABLED": "0",
+    "CRON_SCHEDULE": "*/5 * * * *",
+    "NEXT_SCHEDULER_MODE": "dispatch",
+    "NEXT_SCHEDULER_BATCH_SIZE": "25",
+    "NEXT_SCHEDULER_DAILY_BUDGET": "600",
+    "REPORT_STORAGE": "d1",
+    "DETAILED_REPORTS_DAILY_WRITE_BUDGET": "800",
+    "DETAILED_REPORTS_DAILY_DELETE_BUDGET": "800",
+    "DETAILED_REPORTS_CLEANUP_PER_CRON": "3"
+  },
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true,
+      "head_sampling_rate": 1
+    },
+    "traces": {
+      "enabled": true,
+      "head_sampling_rate": 0.05
+    }
+  },
+  "queues": {
+    "producers": [
+      {
+        "binding": "SCAN_QUEUE",
+        "queue": "speedpulse-scans"
+      }
+    ],
+    "consumers": [
+      {
+        "queue": "speedpulse-scans",
+        "max_batch_size": 1,
+        "max_batch_timeout": 1,
+        "max_retries": 3,
+        "dead_letter_queue": "speedpulse-scans-dlq",
+        "max_concurrency": 1,
+        "retry_delay": 120
+      }
+    ]
+  },
+  "kv_namespaces": [
+    {
+      "binding": "REPORTS",
+      "id": "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+    }
+  ],
+  "env": {
+    "staging": {
+      "name": "speedpulse-staging",
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "speedpulse-staging-db",
+          "database_id": "REPLACE_WITH_YOUR_STAGING_D1_DATABASE_ID",
+          "migrations_dir": "migrations"
+        }
+      ],
+      "kv_namespaces": [
+        {
+          "binding": "REPORTS",
+          "id": "REPLACE_WITH_YOUR_STAGING_KV_ID"
+        }
+      ],
+      "vars": {
+        "APP_ENV": "staging",
+        "SCHEDULE_BATCH_SIZE": "1",
+        "NEXT_SCHEDULER_ENABLED": "0",
+        "QUEUE_SCANS_ENABLED": "1",
+        "DETAILED_REPORTS_ENABLED": "1",
+        "LEGACY_SCHEDULER_ENABLED": "0",
+        "CRON_SCHEDULE": "*/5 * * * *",
+        "NEXT_SCHEDULER_MODE": "dispatch",
+        "NEXT_SCHEDULER_BATCH_SIZE": "25",
+        "NEXT_SCHEDULER_DAILY_BUDGET": "600",
+        "REPORT_STORAGE": "d1",
+    "DETAILED_REPORTS_DAILY_WRITE_BUDGET": "800",
+        "DETAILED_REPORTS_DAILY_DELETE_BUDGET": "800",
+        "DETAILED_REPORTS_CLEANUP_PER_CRON": "3"
+      },
+      "queues": {
+        "producers": [
+          {
+            "binding": "SCAN_QUEUE",
+            "queue": "speedpulse-scans-staging"
+          }
+        ],
+        "consumers": [
+          {
+            "queue": "speedpulse-scans-staging",
+            "max_batch_size": 1,
+            "max_batch_timeout": 1,
+            "max_retries": 3,
+            "dead_letter_queue": "speedpulse-scans-staging-dlq",
+            "max_concurrency": 1,
+            "retry_delay": 120
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101828">
+  <title>SpeedPulse</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div id="loginScreen" class="login-screen hidden">
+    <div class="login-shell">
+      <div class="login-intro">
+        <div class="brand brand-large">
+          <span class="brand-mark">SP</span>
+          <span>SpeedPulse</span>
+        </div>
+        <span class="eyebrow accent-eyebrow">Private performance workspace</span>
+        <h1>Measure what changes.<br>Keep the history.</h1>
+        <p>Continuous PageSpeed and Core Web Vitals monitoring for the sites you manage.</p>
+        <div class="login-feature-row">
+          <span>Mobile + desktop</span>
+          <span>Historical trends</span>
+          <span>Cloudflare-native</span>
+        </div>
+      </div>
+      <div class="login-card">
+        <div class="login-card-head">
+          <span class="login-kicker">Secure access</span>
+          <h2>Sign in</h2>
+          <p class="muted">Use your SpeedPulse admin password.</p>
+        </div>
+        <form id="loginForm" class="stack gap-12">
+          <label class="field">
+            <span>Password</span>
+            <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Admin password">
+          </label>
+          <button class="button primary full" type="submit">Sign in to SpeedPulse</button>
+        </form>
+        <p id="loginError" class="form-error hidden"></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="appShell" class="app-shell hidden">
+    <aside class="sidebar">
+      <div class="brand sidebar-brand">
+        <span class="brand-mark">SP</span>
+        <div>
+          <span class="brand-name">SpeedPulse</span>
+          <span class="brand-caption">Performance monitor</span>
+        </div>
+      </div>
+      <div class="nav-label">Workspace</div>
+      <nav class="nav">
+        <button class="nav-item" data-route="#dashboard">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 13h6V4H4v9Zm0 7h6v-5H4v5Zm10 0h6v-9h-6v9Zm0-16v5h6V4h-6Z"/></svg>
+          </span>
+          <span>Overview</span>
+        </button>
+        <button class="nav-item" data-route="#projects">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10l2 2h6.5A1.5 1.5 0 0 1 20 7.5v9A1.5 1.5 0 0 1 18.5 18h-13A1.5 1.5 0 0 1 4 16.5v-11Z"/></svg>
+          </span>
+          <span>Projects</span>
+        </button>
+
+        <button class="nav-item" data-route="#queue">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M4 5h12v2H4V5Zm0 6h12v2H4v-2Zm0 6h12v2H4v-2Zm14-9 4 4-4 4v-3h-3v-2h3V8Z"/>
+            </svg>
+          </span>
+          <span>Queue</span>
+        </button>
+
+        <button class="nav-item" data-route="#capacity">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-4h2v4zm0-6h-2V7h2v4z"/>
+            </svg>
+          </span>
+          <span>Capacity</span>
+        </button>
+      </nav>
+      <div class="sidebar-spacer"></div>
+      <div class="sidebar-foot">
+        <button id="settingsButton" class="nav-item subtle">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm8 3.5c0-.5-.05-.98-.14-1.45l2.03-1.58-2-3.46-2.49 1a8.05 8.05 0 0 0-2.5-1.45L14.5 2h-5l-.4 3.06A8.05 8.05 0 0 0 6.6 6.5l-2.49-1-2 3.46 2.03 1.58A7.93 7.93 0 0 0 4 12c0 .5.05.98.14 1.45l-2.03 1.58 2 3.46 2.49-1a8.05 8.05 0 0 0 2.5 1.45L9.5 22h5l.4-3.06a8.05 8.05 0 0 0 2.5-1.45l2.49 1 2-3.46-2.03-1.58c.09-.47.14-.95.14-1.45Z"/></svg>
+          </span>
+          <span>Settings</span>
+        </button>
+        <button id="logoutButton" class="nav-item subtle">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M10 4H5.5A1.5 1.5 0 0 0 4 5.5v13A1.5 1.5 0 0 0 5.5 20H10v-2H6V6h4V4Zm5.6 3.4-1.4 1.4 2.2 2.2H9v2h7.4l-2.2 2.2 1.4 1.4L20.2 12l-4.6-4.6Z"/></svg>
+          </span>
+          <span>Sign out</span>
+        </button>
+      </div>
+    </aside>
+
+    <div class="workspace">
+      <header class="mobile-header">
+        <div class="brand"><span class="brand-mark">SP</span><span>SpeedPulse</span></div>
+        <button id="mobileMenuButton" class="icon-button" aria-label="Menu">☰</button>
+      </header>
+      <main id="mainContent" class="main-content"></main>
+    </div>
+  </div>
+
+  <div id="modalRoot" class="modal-root hidden" role="dialog" aria-modal="true"></div>
+  <div id="toast" class="toast hidden"></div>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  >
+  <title>SpeedPulse Next</title>
+  <link
+    rel="stylesheet"
+    href="/next.css"
+  >
+</head>
+
+<body>
+  <div
+    id="loginView"
+    class="login-shell hidden"
+  >
+    <form
+      id="loginForm"
+      class="login-card"
+    >
+      <div class="eyebrow">
+        SPEEDPULSE NEXT
+      </div>
+
+      <h1>Sign in</h1>
+
+      <p class="muted">
+        Use the staging admin password.
+      </p>
+
+      <input
+        id="loginPassword"
+        type="password"
+        autocomplete="current-password"
+        placeholder="Password"
+        required
+      >
+
+      <button
+        class="primary"
+        type="submit"
+      >
+        Sign in
+      </button>
+
+      <div
+        id="loginError"
+        class="error-text"
+      ></div>
+    </form>
+  </div>
+
+  <div
+    id="appView"
+    class="app hidden"
+  >
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">
+          SPEEDPULSE NEXT
+        </div>
+
+        <h1>
+          Website monitoring
+        </h1>
+      </div>
+
+      <div class="topbar-actions">
+        <span
+          id="systemStatus"
+          class="pill"
+        >
+          Loading…
+        </span>
+
+        <button
+          id="refreshButton"
+          class="secondary"
+          type="button"
+        >
+          Refresh
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="summary-grid">
+        <article class="summary-card">
+          <span>Now</span>
+          <strong id="nowValue">—</strong>
+          <small id="nowDetail">
+            Loading sites
+          </small>
+        </article>
+
+        <article class="summary-card">
+          <span>Changed</span>
+          <strong id="changedValue">—</strong>
+          <small id="changedDetail">
+            Recent scan activity
+          </small>
+        </article>
+
+        <article class="summary-card">
+          <span>Do next</span>
+          <strong id="doNextValue">—</strong>
+          <small id="doNextDetail">
+            Queue health
+          </small>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Sites</h2>
+            <p class="muted">
+              Search, select and manage up to
+              500 sites at once.
+            </p>
+          </div>
+
+          <div
+            id="selectionCount"
+            class="selection-count"
+          >
+            0 selected
+          </div>
+        </div>
+
+        <div class="filters">
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="Search site, URL or project"
+          >
+
+          <select id="projectFilter">
+            <option value="">
+              All projects
+            </option>
+          </select>
+
+          <select id="activeFilter">
+            <option value="">
+              All sites
+            </option>
+            <option value="1">
+              Active
+            </option>
+            <option value="0">
+              Inactive
+            </option>
+          </select>
+
+          <select id="pageSize">
+            <option value="25">
+              25 / page
+            </option>
+            <option
+              value="50"
+              selected
+            >
+              50 / page
+            </option>
+            <option value="100">
+              100 / page
+            </option>
+          </select>
+
+          <button
+            id="searchButton"
+            class="secondary"
+            type="button"
+          >
+            Apply
+          </button>
+        </div>
+
+        <div class="selection-tools">
+          <button
+            id="selectPageButton"
+            class="ghost"
+            type="button"
+          >
+            Select page
+          </button>
+
+          <button
+            id="selectAllButton"
+            class="ghost"
+            type="button"
+          >
+            Select all matching
+          </button>
+
+          <button
+            id="clearSelectionButton"
+            class="ghost"
+            type="button"
+          >
+            Clear
+          </button>
+        </div>
+
+        <div class="bulk-box">
+          <div class="bulk-row">
+            <label>
+              Strategy
+              <select id="bulkStrategy">
+                <option value="both">
+                  Mobile + Desktop
+                </option>
+                <option value="mobile">
+                  Mobile
+                </option>
+                <option value="desktop">
+                  Desktop
+                </option>
+              </select>
+            </label>
+
+            <button
+              id="runNowButton"
+              class="primary"
+              type="button"
+            >
+              Run now
+            </button>
+
+            <button
+              id="monitorOnButton"
+              class="secondary"
+              type="button"
+            >
+              Monitoring on
+            </button>
+
+            <button
+              id="monitorOffButton"
+              class="secondary danger-soft"
+              type="button"
+            >
+              Monitoring off
+            </button>
+          </div>
+
+          <div class="schedule-title">
+            Schedule selected sites
+          </div>
+
+          <div class="bulk-row schedule-row">
+            <label>
+              Type
+              <select id="scheduleType">
+                <option value="interval">
+                  Every X minutes
+                </option>
+                <option value="daily">
+                  Daily
+                </option>
+                <option value="weekly">
+                  Weekly
+                </option>
+                <option value="manual">
+                  Manual only
+                </option>
+              </select>
+            </label>
+
+            <label
+              id="intervalField"
+            >
+              Minutes
+              <input
+                id="intervalMinutes"
+                type="number"
+                min="5"
+                max="525600"
+                value="4320"
+              >
+            </label>
+
+            <label
+              id="timeField"
+              class="hidden"
+            >
+              Time
+              <input
+                id="scheduleTime"
+                type="time"
+                value="06:00"
+              >
+            </label>
+
+            <label
+              id="daysField"
+              class="hidden"
+            >
+              Days (0=Sun … 6=Sat)
+              <input
+                id="scheduleDays"
+                type="text"
+                value="1,4"
+                placeholder="1,4"
+              >
+            </label>
+
+            <label>
+              Timezone
+              <input
+                id="scheduleTimezone"
+                type="text"
+                value="UTC"
+                placeholder="Asia/Kolkata"
+              >
+            </label>
+
+            <button
+              id="applyScheduleButton"
+              class="primary"
+              type="button"
+            >
+              Apply schedule
+            </button>
+          </div>
+
+          <div
+            id="actionMessage"
+            class="action-message"
+          ></div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="check-cell"></th>
+                <th>Site</th>
+                <th>Project</th>
+                <th>Mobile</th>
+                <th>Desktop</th>
+                <th>State</th>
+              </tr>
+            </thead>
+
+            <tbody id="siteRows">
+              <tr>
+                <td
+                  colspan="6"
+                  class="empty"
+                >
+                  Loading…
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pager">
+          <button
+            id="previousPage"
+            class="secondary"
+            type="button"
+          >
+            Previous
+          </button>
+
+          <span id="pageLabel">
+            Page —
+          </span>
+
+          <button
+            id="nextPage"
+            class="secondary"
+            type="button"
+          >
+            Next
+          </button>
+        </div>
+      </section>
+
+      <section
+        id="reportPanel"
+        class="panel report-panel"
+      >
+        <div class="panel-head">
+          <div>
+            <h2>
+              Detailed Lighthouse reports
+            </h2>
+
+            <p
+              id="reportSiteName"
+              class="muted"
+            >
+              Choose “Detailed reports” on a site.
+            </p>
+          </div>
+
+          <div class="report-strategies">
+            <button
+              id="reportMobileButton"
+              class="secondary"
+              type="button"
+            >
+              Mobile
+            </button>
+
+            <button
+              id="reportDesktopButton"
+              class="secondary"
+              type="button"
+            >
+              Desktop
+            </button>
+          </div>
+        </div>
+
+        <div
+          id="reportComparison"
+          class="report-comparison"
+        >
+          <div class="empty">
+            Select a site to compare its newest two successful reports.
+          </div>
+        </div>
+
+        <div
+          id="reportHistory"
+          class="report-history"
+        ></div>
+      </section>
+
+      <section class="two-columns">
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Recent scans</h2>
+              <p class="muted">
+                Queue execution and failures.
+              </p>
+            </div>
+          </div>
+
+          <div
+            id="recentJobs"
+            class="activity-list"
+          >
+            Loading…
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Bulk activity</h2>
+              <p class="muted">
+                Recent mass operations.
+              </p>
+            </div>
+          </div>
+
+          <div
+            id="bulkJobs"
+            class="activity-list"
+          >
+            Loading…
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="/next.js"></script>
+</body>
+</html>

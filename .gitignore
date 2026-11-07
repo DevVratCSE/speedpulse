@@ -1,0 +1,9 @@
+node_modules/
+.wrangler/
+.dev.vars
+.env
+.DS_Store
+*.log
+.agy-work/
+
+backups/
