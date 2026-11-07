@@ -1,6 +1,23 @@
 # SpeedPulse
 
-A minimal private web app for continuously recording website performance history using Google PageSpeed Insights + Chrome UX Report.
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-speedpulse--demo-blue?style=for-the-badge&logo=cloudflare)](https://speedpulse-demo.pagespeed-monitor.workers.dev)
+[![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers%20%2B%20D1%20%2B%20Queues-F38020?style=for-the-badge&logo=cloudflare)](https://workers.cloudflare.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
+
+A high-performance, self-hosted web app for continuously recording website performance history using Google PageSpeed Insights + Chrome UX Report on Cloudflare's serverless edge.
+
+---
+
+### 🚀 Live Interactive Demo
+
+Experience the live app running in an isolated environment on Cloudflare Workers, D1, and Queues:
+
+- **Live URL:** [https://speedpulse-demo.pagespeed-monitor.workers.dev](https://speedpulse-demo.pagespeed-monitor.workers.dev)
+- **Demo Password:** `demo` (or click **"1-Click Sign In"** on the login screen)
+- **Pre-loaded Benchmarks:** Pre-seeded with 6 top web properties (Wikipedia, GitHub, Cloudflare, Web.dev, Hacker News, MDN) and 5 days of metrics, CrUX data, and interactive SVG trend graphs.
+- **In-App Setup:** You can optionally enter your own Google PageSpeed Insights API key via **Settings** in the UI to trigger on-demand scans.
+
+---
 
 ## Features
 
@@ -35,16 +52,11 @@ Google PSI API v5        Lighthouse lab data
 Chrome UX Report API     real-user Core Web Vitals
 ```
 
+## Documentation
 
-## Recovered live deployment
-
-This copy is prepared to update the existing `speedpulse` Cloudflare Worker. See **[RECOVERY_DEPLOY.md](RECOVERY_DEPLOY.md)** before deploying or rotating the admin credentials. The UI changes are summarized in **[CHANGES.md](CHANGES.md)**.
-
-## Start here
-
-Read **[SETUP.md](SETUP.md)** for the complete deployment walkthrough, including the exact step where you paste your Google API key.
-
-Read **[ARCHITECTURE.md](ARCHITECTURE.md)** for the system design and data-flow explanation.
+- **[SETUP.md](SETUP.md)**: Complete deployment walkthrough, including 1-click resource creation and Google API key setup.
+- **[ARCHITECTURE.md](ARCHITECTURE.md)**: System design, queue worker concurrency, quota ledger, and retention rollups.
+- **[CHANGES.md](CHANGES.md)**: UI and architectural changelog.
 
 ## Quick command map
 

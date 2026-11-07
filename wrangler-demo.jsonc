@@ -1,0 +1,71 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "speedpulse-demo",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-10",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "speedpulse-demo-db",
+      "database_id": "9dbcad04-6949-4360-abfe-f077843dbf67",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "triggers": {
+    "crons": [
+      "0 */4 * * *"
+    ]
+  },
+  "vars": {
+    "APP_ENV": "demo",
+    "SCHEDULE_BATCH_SIZE": "1",
+    "NEXT_SCHEDULER_ENABLED": "1",
+    "QUEUE_SCANS_ENABLED": "1",
+    "DETAILED_REPORTS_ENABLED": "1",
+    "LEGACY_SCHEDULER_ENABLED": "0",
+    "CRON_SCHEDULE": "0 */4 * * *",
+    "NEXT_SCHEDULER_MODE": "dispatch",
+    "NEXT_SCHEDULER_BATCH_SIZE": "10",
+    "NEXT_SCHEDULER_DAILY_BUDGET": "50",
+    "REPORT_STORAGE": "d1",
+    "DETAILED_REPORTS_DAILY_WRITE_BUDGET": "800",
+    "DETAILED_REPORTS_DAILY_DELETE_BUDGET": "800",
+    "DETAILED_REPORTS_CLEANUP_PER_CRON": "3"
+  },
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true,
+      "head_sampling_rate": 1
+    }
+  },
+  "queues": {
+    "producers": [
+      {
+        "binding": "SCAN_QUEUE",
+        "queue": "speedpulse-demo-scans"
+      }
+    ],
+    "consumers": [
+      {
+        "queue": "speedpulse-demo-scans",
+        "max_batch_size": 1,
+        "max_batch_timeout": 1,
+        "max_retries": 3,
+        "dead_letter_queue": "speedpulse-demo-scans-dlq",
+        "max_concurrency": 1,
+        "retry_delay": 120
+      }
+    ]
+  },
+  "kv_namespaces": [
+    {
+      "binding": "REPORTS",
+      "id": "1cb4ee7a59bf4aec8587270f7480ab8e"
+    }
+  ]
+}

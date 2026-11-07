@@ -4563,6 +4563,17 @@ async function openSettings() {
   } catch (e) { toast(e.message,"error"); }
 }
 
+const fillDemoBtn = $("#btnFillDemoPassword");
+if (fillDemoBtn) {
+  fillDemoBtn.onclick = () => {
+    const pwdInput = $("#loginPassword");
+    if (pwdInput) {
+      pwdInput.value = "demo";
+      $("#loginForm").requestSubmit();
+    }
+  };
+}
+
 $("#loginForm").onsubmit = async e => {
   e.preventDefault(); $("#loginError").classList.add("hidden");
   try {

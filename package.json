@@ -8,6 +8,7 @@
     "deploy": "wrangler deploy --env=\"\"",
     "deploy:prod": "wrangler deploy --env=\"\"",
     "deploy:staging": "wrangler deploy --env staging",
+    "deploy:demo": "wrangler deploy --config wrangler-demo.jsonc",
     "typecheck": "tsc --noEmit",
     "check": "npm run typecheck && node --check public/app.js && node --check public/next.js && node scripts/verify-control-plane.mjs && node scripts/verify-detailed-reports.mjs && node scripts/verify-checkpoint-18.mjs && node scripts/verify-checkpoint-19.mjs && node scripts/verify-checkpoint-20.mjs && node scripts/verify-checkpoint20-runtime.mjs && node scripts/verify-stale-job-recovery.mjs && node scripts/verify-dynamic-scheduler.mjs && node scripts/verify-cpu-reduction.mjs && node scripts/verify-quota-ledger.mjs && node scripts/verify-report-storage.mjs && node scripts/verify-retention-rollups.mjs && node scripts/verify-capacity-tab.mjs && node scripts/verify-demo-onboarding.mjs",
     "seed:demo": "node scripts/seed-demo.mjs",
@@ -16,7 +17,8 @@
     "capacity:model": "node scripts/capacity-model.mjs",
     "capacity:test": "node scripts/capacity-test.mjs",
     "db:migrate:local": "wrangler d1 migrations apply speedpulse-next-staging-db --local",
-    "db:migrate:remote": "wrangler d1 migrations apply speedpulse-next-staging-db --remote"
+    "db:migrate:remote": "wrangler d1 migrations apply speedpulse-next-staging-db --remote",
+    "db:migrate:demo": "wrangler d1 migrations apply speedpulse-demo-db --remote --config wrangler-demo.jsonc"
   },
   "devDependencies": {
     "typescript": "^5.8.3",
