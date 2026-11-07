@@ -2343,26 +2343,43 @@ async function renderCapacity() {
 
   const heartbeat = data.heartbeat || {};
   const isStale = Boolean(heartbeat.isStale);
-  const ageMinutes = heartbeat.ageMinutes != null ? `${heartbeat.ageMinutes}m` : "unknown";
-  const lastRunText = heartbeat.lastCronRunAt ? formatDate(heartbeat.lastCronRunAt) : "Never recorded";
+  const hasEverRun = Boolean(heartbeat.lastCronRunAt);
+  const ageMinutes = heartbeat.ageMinutes != null ? `${heartbeat.ageMinutes}m` : null;
+  const lastRunText = heartbeat.lastCronRunAt ? formatDate(heartbeat.lastCronRunAt) : "Awaiting first scheduled tick";
 
-  const cronBadge = isStale
-    ? statusBadge(`Stale (${ageMinutes} ago)`, "bad")
-    : statusBadge(`Healthy (${ageMinutes} ago)`, "good");
+  const cronBadge = !hasEverRun
+    ? statusBadge("Pending first run", "neutral")
+    : isStale
+    ? statusBadge(`Stale (${ageMinutes || "unknown"} ago)`, "bad")
+    : statusBadge(`Healthy (${ageMinutes || "<1m"} ago)`, "good");
 
   let warningBanner = "";
   if (isStale) {
-    warningBanner += `
-      <div class="card" style="border-left: 4px solid var(--bad); margin-bottom: 20px; background: #fffbfa;">
-        <div style="display: flex; gap: 12px; align-items: flex-start;">
-          <div style="color: var(--bad); font-size: 20px; line-height: 1;">⚠️</div>
-          <div>
-            <strong style="color: var(--bad);">Cron Heartbeat Warning:</strong> Scheduled cron has not reported in ${escapeHtml(ageMinutes)} (expected &le; 15 minutes).
-            <div class="small muted" style="margin-top: 4px;">Verify that Cloudflare Cron Triggers are enabled in wrangler.jsonc and deployed to your Worker.</div>
+    if (!hasEverRun) {
+      warningBanner += `
+        <div class="card" style="border-left: 4px solid var(--accent); margin-bottom: 20px; background: var(--accent-soft);">
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <div style="color: var(--accent); font-size: 20px; line-height: 1;">ℹ️</div>
+            <div>
+              <strong style="color: var(--accent-strong);">Cron Heartbeat Warning:</strong> Scheduled cron has not reported its first tick yet.
+              <div class="small muted" style="margin-top: 4px; color: #475467;">Scheduled runs will begin automatically according to the cron schedule in wrangler.jsonc. The heartbeat monitor will turn healthy on the first execution.</div>
+            </div>
           </div>
         </div>
-      </div>
-    `;
+      `;
+    } else {
+      warningBanner += `
+        <div class="card" style="border-left: 4px solid var(--bad); margin-bottom: 20px; background: #fffbfa;">
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <div style="color: var(--bad); font-size: 20px; line-height: 1;">⚠️</div>
+            <div>
+              <strong style="color: var(--bad);">Cron Heartbeat Warning:</strong> Scheduled cron has not reported in ${escapeHtml(ageMinutes || "unknown")} (expected &le; 15 minutes).
+              <div class="small muted" style="margin-top: 4px;">Verify that Cloudflare Cron Triggers are enabled in wrangler.jsonc and deployed to your Worker.</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
   }
 
   if (data.overallStatus === "paused") {
@@ -2443,7 +2460,7 @@ async function renderCapacity() {
           ${cronBadge}
         </div>
         <div style="font-size: 24px; font-weight: 800; color: #101828; margin-bottom: 4px;">
-          ${isStale ? `<span style="color: var(--bad);">${escapeHtml(ageMinutes)} old</span>` : `<span style="color: var(--good);">${escapeHtml(ageMinutes)} ago</span>`}
+          ${!hasEverRun ? `<span style="color: var(--muted); font-size: 19px; font-weight: 700;">Awaiting first tick</span>` : isStale ? `<span style="color: var(--bad);">${escapeHtml(ageMinutes || "unknown")} old</span>` : `<span style="color: var(--good);">${escapeHtml(ageMinutes || "<1m")} ago</span>`}
         </div>
         <div class="small muted">Last cron tick: ${escapeHtml(lastRunText)}</div>
         <div class="small muted" style="margin-top: 8px;">Threshold: flags warning badge if elapsed time exceeds 15 minutes.</div>
@@ -2528,15 +2545,15 @@ async function renderDashboard() {
   }).join("") : `<tr><td colspan="3"><div class="empty"><h3>Everything looks calm</h3><p>No monitored sites currently match the attention rules.</p></div></td></tr>`;
 
   const apiKeyBanner = !data.apiConfigured ? `
-    <div class="card" id="apiKeyAlertBanner" style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.35); margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 18px; border-radius: 12px;">
-      <div style="display: flex; align-items: center; gap: 12px;">
-        <span style="font-size: 22px;">⚡</span>
+    <div class="api-key-banner" id="apiKeyAlertBanner">
+      <div class="api-key-banner-main">
+        <div class="api-key-banner-icon">⚡</div>
         <div>
-          <div style="font-weight: 600; color: #fde68a; font-size: 14px;">Google PageSpeed API Key Not Configured</div>
-          <div class="muted small" style="color: #fef3c7; opacity: 0.85; margin-top: 2px;">SpeedPulse requires a Google PageSpeed API key to run performance scans. You can add one directly in Settings without touching the command line.</div>
+          <div class="api-key-banner-title">Google PageSpeed API Key Not Configured</div>
+          <div class="api-key-banner-copy">SpeedPulse requires a Google PageSpeed API key to run performance scans. You can add one directly in Settings without touching the command line.</div>
         </div>
       </div>
-      <button class="button small" id="bannerSetupApiKeyBtn" style="background: #f59e0b; color: #111; font-weight: 600; border: none; white-space: nowrap; padding: 7px 14px; border-radius: 8px;">Configure Key</button>
+      <button class="api-key-banner-btn" id="bannerSetupApiKeyBtn">Configure Key</button>
     </div>` : "";
 
   $("#mainContent").innerHTML = `
